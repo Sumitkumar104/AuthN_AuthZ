@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const userschema = require("../model/schema");
+const jwt = require("jsonwebtoken");
 
 
 // function for signup
@@ -13,7 +14,7 @@ exports.signup = async (req, res) => {
         // check if email enter by the user is already exist or not.
         const existinguserdata = await userschema.findOne({ email });
 
-        if (existinguserdata != null) // if existinguserdata != NULL(if found  user)
+        if (existinguserdata !== null) // if existinguserdata != NULL(if found  user)
         {
             return res.status(500).json({
                 message: "user is already exist",
@@ -51,15 +52,12 @@ exports.signup = async (req, res) => {
 
     }
     catch (err) {
-      console.error(err);
-      return res.status(500).json({
-        success:false,
-        message:"There is error in process of signup please try again later"
-      })
+        console.error(err);
+        return res.status(500).json({
+            success: false,
+            message: "There is error in process of signup please try again later"
+        })
     }
 
 }
 
-exports.login=async (req,res)=>{
-    
-}

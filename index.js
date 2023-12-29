@@ -6,9 +6,9 @@ app.use(express.json());
 require("dotenv").config();
 const port = process.env.port || 4000;
 
+// mount the other routers
 const router = require("./routes/route");
 app.use("/api/v1", router);
-
 dbconnect();
 
 app.listen(port, () => {
