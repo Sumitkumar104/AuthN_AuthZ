@@ -39,7 +39,7 @@ exports.signin = async (req, res) => {
             let token=jwt.sign(payload,process.env.jwtscreat,{expiresIn:"5h"})
 
             // add the jwt in user data in dB
-            existinguser=existinguser.toObject();
+            existinguser=existinguser.toObject(); 
             existinguser.token=token;
             existinguser.password=undefined; 
 

@@ -5,16 +5,16 @@ require("dotenv").config();
 exports.auth = (req, res, next) => {
     try {
 
-        const token = req.body.token;
+        const token = req.body.token||req.cookies.token||req.header("Authorization").replace("Bearer ","");
         //   or we can alse extract the token from the cookies.
-        if (!token) {
-            return res.status(500).json({
+        if (!token||token===undefined) {
+            return res.status(401).json({
                 success: false,
                 message: "token  missing"
             })
         }
 
-
+ 
         // verified the token
         try {
             const decodetoken = jwt.verify(token, process.env.jwtscreat);
