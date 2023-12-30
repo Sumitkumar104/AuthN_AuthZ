@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
-const userschema = require("../model/schema");
+const user = require("../model/schema");
 const jwt = require("jsonwebtoken");
+const cookie=require("cookies");
 
 require("dotenv").config();
 
@@ -18,7 +19,7 @@ exports.signin = async (req, res) => {
         }
 
         // check if enter email is not present in our database
-        const existinguser = await userschema.findOne({ email });   // here existinguser is object which contain the ddta of user having 'email' this.
+        const existinguser = await user.findOne({ email });   // here existinguser is object which contain the ddta of user having 'email' this.
         if (existinguser === null) {
             return res.status(401).json({
                 success: false,
@@ -36,9 +37,25 @@ exports.signin = async (req, res) => {
         {
 
             // now genterate the json web token
-            let token=jwt.sign(payload,process.env.jwtscreat,{expiresIn:"5h,"})
+            let token=jwt.sign(payload,process.env.jwtscreat,{expiresIn:"5h"})
             existinguser.token=token;
-            user.password=undefined;
+            existinguser.password=undefined; 
+
+            const options={
+                expiresIn:new Date(Date.now()+3*24*60*60*1000),
+                httpOnly:true,
+
+            }
+
+            res.cookie("myfirstcookie",token,options).status(200).json({
+                success:true,
+                token,
+                existinguser,
+                    message:"user signed in successfully",
+
+            })
+
+
 
         }
         else {
@@ -63,7 +80,11 @@ exports.signin = async (req, res) => {
 
     }
     catch (err) {
-
+        console.error(err),
+            res.status(401).json({
+                        message:"there is an error in signin problem please try again later",
+                        success:false
+                    })
     }
 
 }

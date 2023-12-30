@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
-const userschema = require("../model/schema");
+const user = require("../model/schema");
 const jwt = require("jsonwebtoken");
+const mongoose=require("mongoose");
 
 
 // function for signup
@@ -8,13 +9,15 @@ exports.signup = async (req, res) => {
     try {
 
         // fetch the data from the frontend send by the client to server.
-        const { name, password, role, email } = req.body();
+        const { name, password, role, email } = req.body;
         let encryptpassword;
 
         // check if email enter by the user is already exist or not.
-        const existinguserdata = await userschema.findOne({ email });
+        // console.log("1234");
+        const existinguserdata = await user.findOne({email});
+        // console.log("sddfef");
 
-        if (existinguserdata !== null) // if existinguserdata != NULL(if found  user)
+        if (existinguserdata) // if existinguserdata != NULL(if found  user)
         {
             return res.status(500).json({
                 message: "user is already exist",
@@ -37,7 +40,7 @@ exports.signup = async (req, res) => {
 
 
         // Now create the entry of user in our database
-        const createentry = await userschema.create({
+        const createentry = await user.create({
             name, password: encryptpassword, role, email
         })
 
