@@ -1,6 +1,9 @@
 const express = require("express");
 const  {dbconnect} = require("./config/database");
 const app = express();
+const cookieparser=require("cookie-parser");
+
+app.use(cookieparser());
 
 app.use(express.json());
 require("dotenv").config();
