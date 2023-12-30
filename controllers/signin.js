@@ -19,7 +19,7 @@ exports.signin = async (req, res) => {
         }
 
         // check if enter email is not present in our database
-        const existinguser = await user.findOne({ email });   // here existinguser is object which contain the ddta of user having 'email' this.
+        let existinguser = await user.findOne({ email });   // here existinguser is object which contain the ddta of user having 'email' this.
         if (existinguser === null) {
             return res.status(401).json({
                 success: false,
@@ -35,27 +35,27 @@ exports.signin = async (req, res) => {
         // now if email enter is present in database we compare the passwords one that is user enter and other hich present in database in encrypted form
         if (await bcrypt.compare(password, existinguser.password))   // it means password match
         {
-
             // now genterate the json web token
             let token=jwt.sign(payload,process.env.jwtscreat,{expiresIn:"5h"})
+
+            // add the jwt in user data in dB
+            existinguser=existinguser.toObject();
             existinguser.token=token;
             existinguser.password=undefined; 
 
+
+            // generate the cookie and send in response
             const options={
                 expiresIn:new Date(Date.now()+3*24*60*60*1000),
                 httpOnly:true,
-
             }
-
             res.cookie("myfirstcookie",token,options).status(200).json({
                 success:true,
+                message:"cookie genrate successfully",
                 token,
                 existinguser,
-                    message:"user signed in successfully",
-
+                    // message:"user signed in successfully",
             })
-
-
 
         }
         else {

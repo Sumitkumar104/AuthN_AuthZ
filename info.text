@@ -25,3 +25,5 @@ Info about cookies ========>>>>>>>>
 -They are text files stored in our browser works same as a JWT
 - server generate the cookies and  provide it to the user.
 - by these cookies we achieve the authorization and authentication .
+
+- during the request to  site when we make a http request to google  for any site we also send  the cookies with  this request  which store in our browser . during the request of client to server we also pass this cookie then server reads these cookies and provide the authentication to us with the help of cookies.
